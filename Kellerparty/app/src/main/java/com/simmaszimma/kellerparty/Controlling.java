@@ -6,16 +6,20 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +45,7 @@ public class Controlling extends Activity {
 
 
     private ProgressDialog progressDialog;
-    Button btnOn,btnOff;
+    ToggleButton btnOn_Off;
 
 
     @Override
@@ -51,11 +55,7 @@ public class Controlling extends Activity {
 
         ActivityHelper.initialize(this);
         // mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
-        btnOn=(Button)findViewById(R.id.on);
-        btnOff=(Button)findViewById(R.id.off);
-
-
-
+        btnOn_Off=(ToggleButton) findViewById(R.id.LED_ein_aus);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -65,53 +65,30 @@ public class Controlling extends Activity {
 
         Log.d(TAG, "Ready");
 
-
-
-
-
-        btnOn.setOnClickListener(new View.OnClickListener()
-        {
-
+        btnOn_Off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-// TODO Auto-generated method stub
-
-
-
-                try {
-                    mBTSocket.getOutputStream().write(on.getBytes());
-
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    sendMsg(on);
+                    btnOn_Off.setBackgroundColor(Color.GREEN);
                 }
-                btnOn.setVisibility(View.GONE);
-                btnOff.setVisibility(View.VISIBLE);
-            }});
+                else {
+                    sendMsg(off);
+                    btnOn_Off.setBackgroundColor(Color.RED);
 
-        btnOff.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v) {
-// TODO Auto-generated method stub
-
-
-
-                try {
-                    mBTSocket.getOutputStream().write(off.getBytes());
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
-                btnOff.setVisibility(View.GONE);
-                btnOn.setVisibility(View.VISIBLE);
-            }});
+            }
+        });
+    }
 
+    private void sendMsg(String txt){
+        try {
+            mBTSocket.getOutputStream().write(txt.getBytes());
 
-
-
-
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private class ReadInput implements Runnable {

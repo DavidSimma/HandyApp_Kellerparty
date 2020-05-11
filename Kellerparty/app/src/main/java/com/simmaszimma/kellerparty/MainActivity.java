@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private Button search;
     private Button connect;
+    private Button ledSteuern;
+    LinearLayout search_connect;
     private ListView listView;
     private BluetoothAdapter mBTAdapter;
     private static final int BT_ENABLE_REQUEST = 10; // This is the code we use for BT Enable
@@ -57,8 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
         search = (Button) findViewById(R.id.search);
         connect = (Button) findViewById(R.id.connect);
+        ledSteuern = (Button) findViewById(R.id.LEDSteuern);
 
         listView = (ListView) findViewById(R.id.listview);
+        search_connect = (LinearLayout) findViewById(R.id.search_connect);
+
+        ledSteuern.setVisibility(View.VISIBLE);
+        search_connect.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
+        search.setVisibility(View.GONE);
+        connect.setVisibility(View.GONE);
+
 
         if (savedInstanceState != null) {
             ArrayList<BluetoothDevice> list = savedInstanceState.getParcelableArrayList(DEVICE_LIST);
@@ -69,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedIndex != -1) {
                     adapter.setSelectedIndex(selectedIndex);
                     connect.setEnabled(true);
+                    connect.setVisibility(View.VISIBLE);
+
                 }
             } else {
                 initList(new ArrayList<BluetoothDevice>());
@@ -77,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             initList(new ArrayList<BluetoothDevice>());
         }
+
+        ledSteuern.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ledSteuern.setVisibility(View.GONE);
+                search_connect.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.VISIBLE);
+                search.setVisibility(View.VISIBLE);
+            }
+        });
+
         search.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -179,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.setSelectedIndex(position);
                 connect.setEnabled(true);
+                connect.setVisibility(View.VISIBLE);
             }
         });
     }
