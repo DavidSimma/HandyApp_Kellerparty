@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Controlling"
-    android:orientation="vertical">
+    android:background="#474343"
+    android:orientation="vertical"
+    tools:context=".Controlling">
 
     <ToggleButton
         android:id="@+id/LED_ein_aus"
@@ -18,21 +19,115 @@
         android:visibility="visible"
         tools:visibility="visible" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton6"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        android:background="#595454"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-    <ToggleButton
-        android:id="@+id/toggleButton7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        <ToggleButton
+            android:id="@+id/singlecolor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textOff="einzelne Farbe"
+            android:textOn="einzelne Farbe" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton8"
+        <LinearLayout
+            android:id="@+id/singleColorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="324dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/singleColor_colorwheel"
+                    android:layout_width="224dp"
+                    android:layout_height="224dp"
+                    android:src="@drawable/color" />
+
+                <View
+                    android:id="@+id/singleColor_colorwheel_color"
+                    android:layout_width="204dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="10dp"
+                    android:background="#595454" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/send_singlecolor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Fertig"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#595454"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/q_west"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Q-West"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+
+            <ToggleButton
+                android:id="@+id/q_west_on_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ToggleButton" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/fade"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Fade"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+
+        <ToggleButton
+            android:id="@+id/fade_on_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton" />
+
+    </LinearLayout>
+
 </LinearLayout>

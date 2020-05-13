@@ -6,24 +6,23 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 import java.util.UUID;
 
 public class Controlling extends Activity {
@@ -45,7 +44,13 @@ public class Controlling extends Activity {
 
 
     private ProgressDialog progressDialog;
-    ToggleButton btnOn_Off;
+    ToggleButton btnOn_Off, singleColor;
+    Button singleColor_set;
+    LinearLayout singleColorView;
+    ImageView singleColorImage;
+    Bitmap bitmap;
+    View singleColorImageColor;
+    int singleColorR, singleColorG, singleColorB;
 
 
     @Override
@@ -56,6 +61,11 @@ public class Controlling extends Activity {
         ActivityHelper.initialize(this);
         // mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
         btnOn_Off=(ToggleButton) findViewById(R.id.LED_ein_aus);
+        singleColor=(ToggleButton) findViewById(R.id.singlecolor);
+        singleColorView = (LinearLayout) findViewById(R.id.singleColorLayout);
+        singleColorImage = (ImageView) findViewById(R.id.singleColor_colorwheel);
+        singleColor_set=(Button) findViewById(R.id.send_singlecolor);
+        singleColorImageColor = (View) findViewById(R.id.singleColor_colorwheel_color);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -78,7 +88,51 @@ public class Controlling extends Activity {
 
                 }
             }
+        });singleColorView.setVisibility(View.VISIBLE);
+
+
+        singleColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    singleColorView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    singleColorView.setVisibility(View.GONE);
+                }
+            }
         });
+
+        singleColorImage.setDrawingCacheEnabled(true);
+        singleColorImage.buildDrawingCache(true);
+        singleColorImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE){
+                    bitmap = singleColorImage.getDrawingCache();
+
+                    int pixel = bitmap.getPixel((int)event.getX(), (int)event.getY());
+
+                    singleColorR = Color.red(pixel);
+                    singleColorG = Color.green(pixel);
+                    singleColorB = Color.blue(pixel);
+
+                    singleColorImageColor.setBackgroundColor(Color.rgb(singleColorR, singleColorG, singleColorB));
+
+                    singleColor_set.setVisibility(View.VISIBLE);
+
+                }
+                return true;
+            }
+        });
+
+        singleColor_set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMsg()
+            }
+        });
+
     }
 
     private void sendMsg(String txt){
