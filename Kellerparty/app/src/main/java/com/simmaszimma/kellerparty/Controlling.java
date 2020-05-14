@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
+import com.simmaszimma.kellerparty.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -39,18 +38,33 @@ public class Controlling extends Activity {
     private Button mBtnDisconnect;
     private BluetoothDevice mDevice;
 
-    final static String on="1";//on
-    final static String off="0";//off
+    final static String off="A0000000000";//off
+    final static String on="B0000000000";//on
+    static String singleColorString;
+    static String fade_String;
+    static String q_west_String;
+
 
 
     private ProgressDialog progressDialog;
-    ToggleButton btnOn_Off, singleColor;
+    ToggleButton btnOn_Off;
+
+    //singleColor
+    ToggleButton singleColor_on_off;
     Button singleColor_set;
-    LinearLayout singleColorView;
-    ImageView singleColorImage;
-    Bitmap bitmap;
-    View singleColorImageColor;
+    LinearLayout singleColor_View, singleColor_full;
+    ImageView singleColor_Image;
+    Bitmap singleColor_bitmap;
+    View singleColor_ImageColor;
     int singleColorR, singleColorG, singleColorB;
+
+    //qWest
+    LinearLayout qWest_full, qWest_Title, qWest_Label;
+    ToggleButton qWest_on_off;
+    Button qWest_send;
+    Bitmap qWest_bitmap;
+    ImageView qWest_Image;
+    View qWest_ImageColor;
 
 
     @Override
@@ -58,14 +72,24 @@ public class Controlling extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlling);
 
+
+
         ActivityHelper.initialize(this);
-        // mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
         btnOn_Off=(ToggleButton) findViewById(R.id.LED_ein_aus);
-        singleColor=(ToggleButton) findViewById(R.id.singlecolor);
-        singleColorView = (LinearLayout) findViewById(R.id.singleColorLayout);
-        singleColorImage = (ImageView) findViewById(R.id.singleColor_colorwheel);
+
+        //singleColor
+        singleColor_on_off =(ToggleButton) findViewById(R.id.singlecolor);
+        singleColor_View = (LinearLayout) findViewById(R.id.singleColorLayout);
+        singleColor_Image = (ImageView) findViewById(R.id.singleColor_colorwheel);
         singleColor_set=(Button) findViewById(R.id.send_singlecolor);
-        singleColorImageColor = (View) findViewById(R.id.singleColor_colorwheel_color);
+        singleColor_ImageColor = (View) findViewById(R.id.singleColor_colorwheel_color);
+        singleColor_full = (LinearLayout) findViewById(R.id.singleColor_full);
+
+        //qWest
+        qWest_full = (LinearLayout) findViewById()
+
+
+        singleColor_full.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -81,46 +105,48 @@ public class Controlling extends Activity {
                 if (isChecked){
                     sendMsg(on);
                     btnOn_Off.setBackgroundColor(Color.GREEN);
+                    setVisibilityVisible();
                 }
                 else {
                     sendMsg(off);
                     btnOn_Off.setBackgroundColor(Color.RED);
+                    setVisibilityGone();
 
-                }
-            }
-        });singleColorView.setVisibility(View.VISIBLE);
-
-
-        singleColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    singleColorView.setVisibility(View.VISIBLE);
-                }
-                else {
-                    singleColorView.setVisibility(View.GONE);
                 }
             }
         });
 
-        singleColorImage.setDrawingCacheEnabled(true);
-        singleColorImage.buildDrawingCache(true);
-        singleColorImage.setOnTouchListener(new View.OnTouchListener() {
+
+        singleColor_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    singleColor_View.setVisibility(View.VISIBLE);
+                }
+                else {
+                    singleColor_View.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        singleColor_Image.setDrawingCacheEnabled(true);
+        singleColor_Image.buildDrawingCache(true);
+        singleColor_Image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE){
-                    bitmap = singleColorImage.getDrawingCache();
+                    singleColor_bitmap = singleColor_Image.getDrawingCache();
 
-                    int pixel = bitmap.getPixel((int)event.getX(), (int)event.getY());
+                    int pixel = singleColor_bitmap.getPixel((int)event.getX(), (int)event.getY());
 
                     singleColorR = Color.red(pixel);
                     singleColorG = Color.green(pixel);
                     singleColorB = Color.blue(pixel);
 
-                    singleColorImageColor.setBackgroundColor(Color.rgb(singleColorR, singleColorG, singleColorB));
+                    singleColor_ImageColor.setBackgroundColor(Color.rgb(singleColorR, singleColorG, singleColorB));
 
                     singleColor_set.setVisibility(View.VISIBLE);
-
+                    singleColorString = "C" + "0" + singleColorR + singleColorG + singleColorB;
                 }
                 return true;
             }
@@ -129,10 +155,17 @@ public class Controlling extends Activity {
         singleColor_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMsg()
+                sendMsg(singleColorString);
             }
         });
 
+    }
+
+    private void setVisibilityVisible(){
+        singleColor_full.setVisibility(View.VISIBLE);
+    }
+    private void setVisibilityGone(){
+        singleColor_full.setVisibility(View.GONE);
     }
 
     private void sendMsg(String txt){

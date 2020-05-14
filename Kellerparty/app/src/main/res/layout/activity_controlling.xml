@@ -20,11 +20,13 @@
         tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/singleColor_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:background="#595454"
         android:orientation="vertical"
-        android:layout_marginTop="20dp">
+        tools:visibility="gone">
 
         <ToggleButton
             android:id="@+id/singlecolor"
@@ -38,9 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
+                android:id="@+id/singleColorColorView"
                 android:layout_width="wrap_content"
                 android:layout_height="324dp"
                 android:orientation="vertical">
@@ -65,22 +68,23 @@
                 android:id="@+id/send_singlecolor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="Fertig"
                 android:textAlignment="center"
-                android:layout_gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/qWest_full"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#595454"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/qWest_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -103,6 +107,38 @@
                 android:text="ToggleButton" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qWest_Label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/qWest_colorwheel"
+                android:layout_width="224dp"
+                android:layout_height="224dp"
+                android:src="@drawable/color" />
+
+            <View
+                android:id="@+id/qWest_colorwheel_color"
+                android:layout_width="204dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:background="#595454" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/send_qWest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Fertig"
+            android:textAlignment="center"
+            android:visibility="gone" />
 
     </LinearLayout>
 
