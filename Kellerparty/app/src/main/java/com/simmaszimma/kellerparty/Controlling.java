@@ -17,9 +17,11 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import com.simmaszimma.kellerparty.R;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -40,9 +42,9 @@ public class Controlling extends Activity {
 
     final static String off="A0000000000";//off
     final static String on="B0000000000";//on
-    static String singleColorString;
+    static String singleColor_String;
     static String fade_String;
-    static String q_west_String;
+    static String qWest_String;
 
 
 
@@ -51,20 +53,26 @@ public class Controlling extends Activity {
 
     //singleColor
     ToggleButton singleColor_on_off;
-    Button singleColor_set;
+    Button singleColor_send;
     LinearLayout singleColor_View, singleColor_full;
     ImageView singleColor_Image;
     Bitmap singleColor_bitmap;
     View singleColor_ImageColor;
     int singleColorR, singleColorG, singleColorB;
+    String singleColorR_String, singleColorG_String, singleColorB_String;
 
     //qWest
-    LinearLayout qWest_full, qWest_Title, qWest_Label;
+    LinearLayout qWest_full, qWest_Title, qWest_Label, qWest_Custom;
     ToggleButton qWest_on_off;
     Button qWest_send;
     Bitmap qWest_bitmap;
     ImageView qWest_Image;
     View qWest_ImageColor;
+    int qWestR, qWestG, qWestB, qWestSpeed;
+    SeekBar qWest_speedbar;
+    boolean colorChosen, speedChosen;
+    TextView qWest_speedBar_Progress;
+    String qWestR_String, qWestG_String, qWestB_String, qWestSpeed_String;
 
 
     @Override
@@ -81,15 +89,32 @@ public class Controlling extends Activity {
         singleColor_on_off =(ToggleButton) findViewById(R.id.singlecolor);
         singleColor_View = (LinearLayout) findViewById(R.id.singleColorLayout);
         singleColor_Image = (ImageView) findViewById(R.id.singleColor_colorwheel);
-        singleColor_set=(Button) findViewById(R.id.send_singlecolor);
+        singleColor_send =(Button) findViewById(R.id.send_singlecolor);
         singleColor_ImageColor = (View) findViewById(R.id.singleColor_colorwheel_color);
         singleColor_full = (LinearLayout) findViewById(R.id.singleColor_full);
 
         //qWest
-        qWest_full = (LinearLayout) findViewById()
+        qWest_full = (LinearLayout) findViewById(R.id.qWest_full);
+        qWest_on_off = (ToggleButton) findViewById(R.id.q_west_on_off);
+        qWest_Title = (LinearLayout) findViewById(R.id.qWest_Title);
+        qWest_Label = (LinearLayout) findViewById(R.id.qWest_Label);
+        qWest_Image = (ImageView) findViewById(R.id.qWest_colorwheel);
+        qWest_ImageColor = (View) findViewById(R.id.qWest_colorwheel_color);
+        qWest_send = (Button) findViewById(R.id.send_qWest);
+        qWest_speedbar = (SeekBar) findViewById(R.id.qWest_speedbar);
+        colorChosen = false;
+        speedChosen = false;
+        qWest_speedBar_Progress = (TextView) findViewById(R.id.qWest_speedBar_Progress);
+        qWest_Custom = (LinearLayout) findViewById(R.id.qWest_Custom);
+
 
 
         singleColor_full.setVisibility(View.GONE);
+        qWest_full.setVisibility(View.GONE);
+        qWest_send.setVisibility(View.GONE);
+        qWest_Label.setVisibility(View.GONE);
+        qWest_Custom.setVisibility(View.GONE);
+
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -128,7 +153,6 @@ public class Controlling extends Activity {
                 }
             }
         });
-
         singleColor_Image.setDrawingCacheEnabled(true);
         singleColor_Image.buildDrawingCache(true);
         singleColor_Image.setOnTouchListener(new View.OnTouchListener() {
@@ -145,17 +169,92 @@ public class Controlling extends Activity {
 
                     singleColor_ImageColor.setBackgroundColor(Color.rgb(singleColorR, singleColorG, singleColorB));
 
-                    singleColor_set.setVisibility(View.VISIBLE);
-                    singleColorString = "C" + "0" + singleColorR + singleColorG + singleColorB;
+                    singleColor_send.setVisibility(View.VISIBLE);
+
+                    singleColor_String = "C" + "0" + singleColorR + singleColorG + singleColorB;
+
                 }
                 return true;
             }
         });
-
-        singleColor_set.setOnClickListener(new View.OnClickListener() {
+        singleColor_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMsg(singleColorString);
+                sendMsg(singleColor_String);
+            }
+        });
+
+
+        qWest_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    qWest_Label.setVisibility(View.VISIBLE);
+                    qWest_Custom.setVisibility(View.VISIBLE);
+                }
+                else {
+                    qWest_Label.setVisibility(View.GONE);
+                    colorChosen = false;
+                    speedChosen = false;
+                    qWest_Label.setVisibility(View.GONE);
+                    qWest_send.setVisibility(View.GONE);
+                    qWest_Custom.setVisibility(View.GONE);
+
+                }
+            }
+        });
+        qWest_Image.setDrawingCacheEnabled(true);
+        qWest_Image.buildDrawingCache(true);
+        qWest_Image.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE){
+                    qWest_bitmap = qWest_Image.getDrawingCache();
+
+                    int pixel = qWest_bitmap.getPixel((int)event.getX(), (int)event.getY());
+
+                    qWestR = Color.red(pixel);
+                    qWestG = Color.green(pixel);
+                    qWestB = Color.blue(pixel);
+
+                    qWest_ImageColor.setBackgroundColor(Color.rgb(qWestR, qWestG, qWestB));
+
+                    colorChosen = true;
+
+                    if (colorChosen && speedChosen){
+                        qWest_send.setVisibility(View.VISIBLE);
+                    }
+
+                }
+                return true;
+            }
+        });
+        qWest_speedbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress -= 100;
+                qWest_speedBar_Progress.setText("" + -progress + "%");
+                qWestSpeed = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                speedChosen = true;
+                if (colorChosen && speedChosen){
+                    qWest_send.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        qWest_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                qWest_String = "C" + "0" + qWestR + qWestG + qWestB;
+                sendMsg(qWest_String);
             }
         });
 
@@ -163,9 +262,14 @@ public class Controlling extends Activity {
 
     private void setVisibilityVisible(){
         singleColor_full.setVisibility(View.VISIBLE);
+        qWest_full.setVisibility(View.VISIBLE);
+        qWest_Title.setVisibility(View.VISIBLE);
+
     }
     private void setVisibilityGone(){
         singleColor_full.setVisibility(View.GONE);
+        qWest_full.setVisibility(View.GONE);
+        qWest_Title.setVisibility(View.GONE);
     }
 
     private void sendMsg(String txt){

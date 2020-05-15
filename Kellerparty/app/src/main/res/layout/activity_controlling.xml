@@ -17,7 +17,8 @@
         android:textOff="LED ausgeschaltet"
         android:textOn="LED eingeschaltet"
         android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_margin="10dp"/>
 
     <LinearLayout
         android:id="@+id/singleColor_full"
@@ -26,7 +27,8 @@
         android:layout_marginTop="20dp"
         android:background="#595454"
         android:orientation="vertical"
-        tools:visibility="gone">
+        tools:visibility="gone"
+        android:layout_margin="10dp">
 
         <ToggleButton
             android:id="@+id/singlecolor"
@@ -81,7 +83,10 @@
         android:id="@+id/qWest_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="10dp"
+        android:background="#595454"
+        android:orientation="vertical"
+        tools:visibility="gone">
 
         <LinearLayout
             android:id="@+id/qWest_Title"
@@ -111,34 +116,65 @@
         <LinearLayout
             android:id="@+id/qWest_Label"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="450dp"
+            android:orientation="horizontal"
+            tools:visibility="gone">
 
-            <ImageView
-                android:id="@+id/qWest_colorwheel"
-                android:layout_width="224dp"
-                android:layout_height="224dp"
-                android:src="@drawable/color" />
+            <LinearLayout
+                android:id="@+id/qWest_Custom"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <View
-                android:id="@+id/qWest_colorwheel_color"
-                android:layout_width="204dp"
-                android:layout_height="80dp"
-                android:layout_margin="10dp"
-                android:background="#595454" />
+                <ImageView
+                    android:id="@+id/qWest_colorwheel"
+                    android:layout_width="224dp"
+                    android:layout_height="224dp"
+                    android:src="@drawable/color" />
 
+                <View
+                    android:id="@+id/qWest_colorwheel_color"
+                    android:layout_width="204dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="10dp"
+                    android:background="#595454" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Speed: \n"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/qWest_speedBar_Progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF" />
+
+                <SeekBar
+                    android:id="@+id/qWest_speedbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#595454" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/send_qWest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Fertig"
+                android:textAlignment="center"
+                android:visibility="visible" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/send_qWest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Fertig"
-            android:textAlignment="center"
-            android:visibility="gone" />
 
     </LinearLayout>
 
