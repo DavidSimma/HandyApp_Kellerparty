@@ -40,8 +40,8 @@ public class Controlling extends Activity {
     private Button mBtnDisconnect;
     private BluetoothDevice mDevice;
 
-    final static String off="A0000000000";//off
-    final static String on="B0000000000";//on
+    final static String off="A;";//off
+    final static String on="B;";//on
     static String singleColor_String;
     static String fade_String;
     static String qWest_String;
@@ -73,6 +73,15 @@ public class Controlling extends Activity {
     boolean colorChosen, speedChosen;
     TextView qWest_speedBar_Progress;
     String qWestR_String, qWestG_String, qWestB_String, qWestSpeed_String;
+
+    //fade
+    LinearLayout fade_full, fade_layout, fade_label;
+    ToggleButton fade_on_off;
+    Button fade_send;
+    SeekBar fade_speedbar;
+    TextView fade_speedBar_Progress;
+    String fadeSpeed_String;
+    int fadeSpeed;
 
 
     @Override
@@ -107,6 +116,14 @@ public class Controlling extends Activity {
         qWest_speedBar_Progress = (TextView) findViewById(R.id.qWest_speedBar_Progress);
         qWest_Custom = (LinearLayout) findViewById(R.id.qWest_Custom);
 
+        //fade
+        fade_full = (LinearLayout) findViewById(R.id.fade_full);
+        fade_on_off = (ToggleButton) findViewById(R.id.fade_on_off);
+        fade_layout = (LinearLayout) findViewById(R.id.fade_layout);
+        fade_label = (LinearLayout) findViewById(R.id.fade_label);
+        fade_send = (Button) findViewById(R.id.send_fade);
+        fade_speedbar = (SeekBar) findViewById(R.id.fade_speedbar);
+        fade_speedBar_Progress = (TextView) findViewById(R.id.fade_speedBar_Progress);
 
 
         singleColor_full.setVisibility(View.GONE);
@@ -124,6 +141,7 @@ public class Controlling extends Activity {
 
         Log.d(TAG, "Ready");
 
+        //on / off
         btnOn_Off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -142,11 +160,14 @@ public class Controlling extends Activity {
         });
 
 
+        // single color
         singleColor_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     singleColor_View.setVisibility(View.VISIBLE);
+                    fade_on_off.setChecked(false);
+                    qWest_on_off.setChecked(false);
                 }
                 else {
                     singleColor_View.setVisibility(View.GONE);
@@ -170,9 +191,6 @@ public class Controlling extends Activity {
                     singleColor_ImageColor.setBackgroundColor(Color.rgb(singleColorR, singleColorG, singleColorB));
 
                     singleColor_send.setVisibility(View.VISIBLE);
-
-                    singleColor_String = "C" + "0" + singleColorR + singleColorG + singleColorB;
-
                 }
                 return true;
             }
@@ -180,17 +198,62 @@ public class Controlling extends Activity {
         singleColor_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                singleColor_String = "C" + setToLenght3(String.valueOf(singleColorR)) + setToLenght3(String.valueOf(singleColorG)) + setToLenght3(String.valueOf(singleColorB))+";";
                 sendMsg(singleColor_String);
             }
         });
 
+        // Fade
+        fade_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    fade_label.setVisibility(View.VISIBLE);
+                    singleColor_on_off.setChecked(false);
+                    qWest_on_off.setChecked(false);
+                }
+                else {
+                    fade_label.setVisibility(View.GONE);
+                }
+            }
+        });
+        fade_speedbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress -= 100;
+                fade_speedBar_Progress.setText("" + -progress + "%");
+                fadeSpeed = progress;
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                speedChosen = true;
+                    fade_send.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        fade_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fade_String = "F" + setToLenght3(String.valueOf(qWestR)) + setToLenght3(String.valueOf(qWestG)) + setToLenght3(String.valueOf(qWestB))+";";
+                sendMsg(fade_String);
+            }
+        });
+
+        // qWest
         qWest_on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     qWest_Label.setVisibility(View.VISIBLE);
                     qWest_Custom.setVisibility(View.VISIBLE);
+                    fade_on_off.setChecked(false);
+                    singleColor_on_off.setChecked(false);
                 }
                 else {
                     qWest_Label.setVisibility(View.GONE);
@@ -247,13 +310,13 @@ public class Controlling extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                qWestSpeed_String = String.valueOf(qWestSpeed);
             }
         });
         qWest_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qWest_String = "C" + "0" + qWestR + qWestG + qWestB;
+                qWest_String = "Q" + setToLenght3(qWestSpeed_String) + setToLenght3(String.valueOf(qWestR)) + setToLenght3(String.valueOf(qWestG)) + setToLenght3(String.valueOf(qWestB)) +";";
                 sendMsg(qWest_String);
             }
         });
@@ -264,12 +327,30 @@ public class Controlling extends Activity {
         singleColor_full.setVisibility(View.VISIBLE);
         qWest_full.setVisibility(View.VISIBLE);
         qWest_Title.setVisibility(View.VISIBLE);
+        fade_full.setVisibility(View.VISIBLE);
+        fade_layout.setVisibility(View.VISIBLE);
 
     }
     private void setVisibilityGone(){
         singleColor_full.setVisibility(View.GONE);
         qWest_full.setVisibility(View.GONE);
         qWest_Title.setVisibility(View.GONE);
+        fade_full.setVisibility(View.GONE);
+        fade_layout.setVisibility(View.GONE);
+    }
+
+    private String setToLenght3(String value){
+        int tempLength = value.toCharArray().length;
+        switch (tempLength){
+            case 1:
+                return "0" + "0" + value;
+            case 2:
+                return "0" + value;
+            case 3:
+                return value;
+            default:
+                return "000";
+        }
     }
 
     private void sendMsg(String txt){
