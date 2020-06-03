@@ -240,7 +240,7 @@ public class Controlling extends Activity {
         fade_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fade_String = "F" + setToLenght3(String.valueOf(qWestR)) + setToLenght3(String.valueOf(qWestG)) + setToLenght3(String.valueOf(qWestB))+";";
+                fade_String = "F" + setToLenght3(String.valueOf(fadeSpeed))+";";
                 sendMsg(fade_String);
             }
         });
