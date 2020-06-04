@@ -240,7 +240,7 @@ public class Controlling extends Activity {
         fade_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fade_String = "F" + setToLenght3(String.valueOf(fadeSpeed))+";";
+                fade_String = "F" + setToLenght3(String.valueOf(fadeSpeed * (-1)))+";";
                 sendMsg(fade_String);
             }
         });
@@ -310,7 +310,7 @@ public class Controlling extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                qWestSpeed_String = String.valueOf(qWestSpeed);
+                qWestSpeed_String = String.valueOf(qWestSpeed * (-1));
             }
         });
         qWest_send.setOnClickListener(new View.OnClickListener() {
