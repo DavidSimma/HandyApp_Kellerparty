@@ -40,11 +40,16 @@ public class Controlling extends Activity {
     private Button mBtnDisconnect;
     private BluetoothDevice mDevice;
 
-    final static String off="A;";//off
-    final static String on="B;";//on
-    static String singleColor_String;
-    static String fade_String;
-    static String qWest_String;
+    final static String off_ID ="A;";//off
+    final static String on_ID ="B;";//on
+    final static String singleColor_ID ="C";
+    final static String fade_ID ="F";
+    final static String qWest_ID ="Q";
+    final static String red_ID="R";
+    final static String green_ID="G";
+    final static String blue_ID="B";
+    final static String speeed_ID="S";
+    final static String end="\n";
 
 
 
@@ -146,12 +151,12 @@ public class Controlling extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    sendMsg(on);
+                    sendMsg(on_ID);
                     btnOn_Off.setBackgroundColor(Color.GREEN);
                     setVisibilityVisible();
                 }
                 else {
-                    sendMsg(off);
+                    sendMsg(off_ID);
                     btnOn_Off.setBackgroundColor(Color.RED);
                     setVisibilityGone();
 
@@ -199,8 +204,10 @@ public class Controlling extends Activity {
             @Override
             public void onClick(View v) {
 
-                singleColor_String = "C" + setToLenght3(String.valueOf(singleColorR)) + setToLenght3(String.valueOf(singleColorG)) + setToLenght3(String.valueOf(singleColorB))+";";
-                sendMsg(singleColor_String);
+                sendMsg(singleColor_ID+end);
+                sendMsg(red_ID+setToLenght3(String.valueOf(singleColorR))+end);
+                sendMsg(green_ID+setToLenght3(String.valueOf(singleColorG))+end);
+                sendMsg(blue_ID+setToLenght3(String.valueOf(singleColorB))+end);
             }
         });
 
@@ -240,8 +247,9 @@ public class Controlling extends Activity {
         fade_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fade_String = "F" + setToLenght3(String.valueOf(fadeSpeed * (-1)))+";";
-                sendMsg(fade_String);
+                sendMsg(fade_ID+end);
+                sendMsg(speeed_ID+setToLenght3(String.valueOf(fadeSpeed * (-1)))+end);
+
             }
         });
 
@@ -316,8 +324,12 @@ public class Controlling extends Activity {
         qWest_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qWest_String = "Q" + setToLenght3(qWestSpeed_String) + setToLenght3(String.valueOf(qWestR)) + setToLenght3(String.valueOf(qWestG)) + setToLenght3(String.valueOf(qWestB)) +";";
-                sendMsg(qWest_String);
+                sendMsg(qWest_ID+end);
+                sendMsg(speeed_ID+setToLenght3(qWestSpeed_String)+end);
+                sendMsg(red_ID+setToLenght3(String.valueOf(qWestR))+end);
+                sendMsg(green_ID+setToLenght3(String.valueOf(qWestG))+end);
+                sendMsg(blue_ID+setToLenght3(String.valueOf(qWestB))+end);
+
             }
         });
 
