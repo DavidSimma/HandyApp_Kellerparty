@@ -40,8 +40,8 @@ public class Controlling extends Activity {
     private Button mBtnDisconnect;
     private BluetoothDevice mDevice;
 
-    final static String off_ID ="A;";//off
-    final static String on_ID ="B;";//on
+    final static String off_ID ="a";//off
+    final static String on_ID ="b";//on
     final static String singleColor_ID ="C";
     final static String fade_ID ="F";
     final static String qWest_ID ="Q";
@@ -151,12 +151,12 @@ public class Controlling extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    sendMsg(on_ID);
+                    sendMsg(on_ID+end);
                     btnOn_Off.setBackgroundColor(Color.GREEN);
                     setVisibilityVisible();
                 }
                 else {
-                    sendMsg(off_ID);
+                    sendMsg(off_ID+end);
                     btnOn_Off.setBackgroundColor(Color.RED);
                     setVisibilityGone();
 
@@ -235,8 +235,7 @@ public class Controlling extends Activity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                speedChosen = true;
-                    fade_send.setVisibility(View.VISIBLE);
+                fade_send.setVisibility(View.VISIBLE);
             }
 
             @Override
